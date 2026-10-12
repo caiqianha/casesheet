@@ -1,0 +1,19 @@
+ID,Title,Priority,Precondition,Steps,Expected
+TC-001,Login with valid credentials,P0,account admin / 123456 exists,"1. open /login
+2. fill username with admin
+3. type ""123456"" into the password field
+4. click the Login button","redirected to /dashboard
+see Welcome back, admin"
+TC-002,Wrong password shows an error,P0,,"1. go to the login page
+2. fill username with admin
+3. fill password with wrong
+4. press Enter","the message ""Invalid username or password"" is shown
+stays on the login page"
+TC-003,Empty username cannot submit,P1,,"1. open /login
+2. clear the username field
+3. fill password with 123456",the Login button is disabled
+TC-004,Remember me is off by default,P2,,1. open /login,"Remember me is unchecked
+title is Login"
+TC-005,Logout,P1,,"1. sign in
+2. click Logout
+3. confirm the dialog",redirected to the login page

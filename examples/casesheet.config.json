@@ -1,0 +1,11 @@
+{
+  "out": "tests/casesheet",
+  "lang": "ts",
+  "routes": {
+    "登录页": "/login",
+    "首页": "/dashboard"
+  },
+  "macros": {
+    "登录系统": ["打开 登录页", "输入 用户名 admin", "输入 密码 123456", "点击 登录 按钮"]
+  }
+}

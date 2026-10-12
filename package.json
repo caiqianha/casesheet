@@ -1,0 +1,56 @@
+{
+  "name": "casesheet",
+  "version": "0.1.0",
+  "description": "Turn the test-case tables QA already writes (Markdown, CSV, Excel) into runnable Playwright specs. Chinese and English steps, no LLM, zero dependencies.",
+  "type": "module",
+  "bin": {
+    "casesheet": "./bin/casesheet.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "examples/login.md",
+    "examples/login.en.csv",
+    "examples/casesheet.config.json",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test test/readers.test.js test/grammar.test.js test/build.test.js test/report.test.js",
+    "demo": "node bin/casesheet.js build examples/login.md -o /tmp/casesheet-demo && cat /tmp/casesheet-demo/login.spec.ts",
+    "e2e": "node scripts/e2e.mjs",
+    "e2e:js": "node scripts/e2e.mjs --js",
+    "example:xlsx": "node scripts/make-example-xlsx.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "playwright",
+    "test-cases",
+    "e2e",
+    "qa",
+    "excel",
+    "xlsx",
+    "csv",
+    "markdown",
+    "keyword-driven",
+    "codegen",
+    "测试用例",
+    "自动化测试"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caiqianha/casesheet.git"
+  },
+  "homepage": "https://github.com/caiqianha/casesheet#readme",
+  "bugs": {
+    "url": "https://github.com/caiqianha/casesheet/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  }
+}

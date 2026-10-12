@@ -1,0 +1,22 @@
+name: A step or expectation is not recognised
+description: casesheet marked a sentence as unrecognised that it should understand
+labels: [grammar]
+body:
+  - type: textarea
+    id: sentences
+    attributes:
+      label: The sentences (one per line, exactly as written in the sheet)
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: meaning
+    attributes:
+      label: What each one should do in Playwright
+      placeholder: "点击 X → ui.click(page, 'X')"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: casesheet version

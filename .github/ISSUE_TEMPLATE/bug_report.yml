@@ -1,0 +1,22 @@
+name: Bug report
+description: Wrong code generated, a sheet that fails to parse, or a runtime helper that misbehaves
+labels: [bug]
+body:
+  - type: textarea
+    id: sheet
+    attributes:
+      label: Minimal sheet that reproduces it (Markdown table is easiest)
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: got
+    attributes:
+      label: Generated code or error, and what you expected instead
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: casesheet / Playwright / Node versions
+      placeholder: "casesheet 0.1.0, @playwright/test 1.64, node 20"

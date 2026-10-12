@@ -1,0 +1,716 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/playwright.config.ts",
+    "rootDir": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 20000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests",
+        "snapshotDir": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 20000,
+        "use": {
+          "baseURL": "http://localhost:4173",
+          "headless": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node /Users/frey/Desktop/cc/casesheet/examples/serve.mjs",
+      "url": "http://localhost:4173/login",
+      "reuseExistingServer": true,
+      "timeout": 15000
+    }
+  },
+  "suites": [
+    {
+      "title": "casesheet/login.spec.ts",
+      "file": "casesheet/login.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "登录模块",
+          "file": "casesheet/login.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "[TC-001] 正确账号密码登录成功",
+              "ok": true,
+              "tags": [
+                "P0"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:5",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 6,
+                        "column": 7
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 377,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1. 打开 /login",
+                          "duration": 37
+                        },
+                        {
+                          "title": "2. 在用户名框输入 admin",
+                          "duration": 64
+                        },
+                        {
+                          "title": "3. 输入 密码: 123456",
+                          "duration": 47
+                        },
+                        {
+                          "title": "4. 点击 登录 按钮",
+                          "duration": 55
+                        },
+                        {
+                          "title": "预期 4: 跳转到 /dashboard",
+                          "duration": 7
+                        },
+                        {
+                          "title": "预期 4: 显示 欢迎回来, admin",
+                          "duration": 3
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:08.381Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:5",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 6,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-720b254743442f802eab",
+              "file": "casesheet/login.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "[TC-002] 密码错误给出提示",
+              "ok": true,
+              "tags": [
+                "P0"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:6",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 28,
+                        "column": 7
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 148,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1. 打开 登录页",
+                          "duration": 13
+                        },
+                        {
+                          "title": "2. 输入 用户名 admin",
+                          "duration": 25
+                        },
+                        {
+                          "title": "3. 输入 密码 wrong",
+                          "duration": 50
+                        },
+                        {
+                          "title": "4. 按下 回车",
+                          "duration": 3
+                        },
+                        {
+                          "title": "预期 4: 提示「用户名或密码错误」",
+                          "duration": 2
+                        },
+                        {
+                          "title": "预期 4: 仍在 登录页",
+                          "duration": 2
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:09.025Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:6",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 28,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-65838d698d62746333de",
+              "file": "casesheet/login.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "[TC-003] 空用户名不能提交",
+              "ok": true,
+              "tags": [
+                "P1"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:7",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 49,
+                        "column": 7
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 126,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1. 打开 /login",
+                          "duration": 12
+                        },
+                        {
+                          "title": "2. 清空 用户名",
+                          "duration": 25
+                        },
+                        {
+                          "title": "3. 输入 密码 123456",
+                          "duration": 40
+                        },
+                        {
+                          "title": "预期 3: 登录 按钮不可用",
+                          "duration": 5
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:09.179Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:7",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 49,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-cf845157604bf60e5c02",
+              "file": "casesheet/login.spec.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "[TC-004] 记住我默认未勾选",
+              "ok": true,
+              "tags": [
+                "P2"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:8",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 64,
+                        "column": 7
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 75,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1. 打开 /login",
+                          "duration": 11
+                        },
+                        {
+                          "title": "预期 1: 记住我 未勾选",
+                          "duration": 19
+                        },
+                        {
+                          "title": "预期 1: 标题为 登录",
+                          "duration": 2
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:09.311Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:8",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 64,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-24b69b3b3327eb6c3ae9",
+              "file": "casesheet/login.spec.ts",
+              "line": 64,
+              "column": 7
+            },
+            {
+              "title": "[TC-005] 勾选记住我后登录",
+              "ok": true,
+              "tags": [
+                "P1"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:9",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 76,
+                        "column": 7
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 191,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1. 打开 /login",
+                          "duration": 11
+                        },
+                        {
+                          "title": "2. 输入 用户名 {{CASESHEET_USER}}",
+                          "duration": 23
+                        },
+                        {
+                          "title": "3. 输入 密码 {{CASESHEET_PASS}}",
+                          "duration": 40
+                        },
+                        {
+                          "title": "4. 勾选 记住我",
+                          "duration": 36
+                        },
+                        {
+                          "title": "5. 点击 登录",
+                          "duration": 34
+                        },
+                        {
+                          "title": "预期 5: 跳转到首页",
+                          "duration": 2
+                        },
+                        {
+                          "title": "预期 5: 不显示 登录 按钮",
+                          "duration": 2
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:09.394Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:9",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 76,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-41c4739dc8e472a813c5",
+              "file": "casesheet/login.spec.ts",
+              "line": 76,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "个人中心",
+          "file": "casesheet/login.spec.ts",
+          "line": 101,
+          "column": 6,
+          "specs": [
+            {
+              "title": "[TC-010] 修改昵称",
+              "ok": true,
+              "tags": [
+                "P1"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:15",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 102,
+                        "column": 7
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 245,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1.1. 打开 登录页",
+                          "duration": 11
+                        },
+                        {
+                          "title": "1.2. 输入 用户名 admin",
+                          "duration": 25
+                        },
+                        {
+                          "title": "1.3. 输入 密码 123456",
+                          "duration": 38
+                        },
+                        {
+                          "title": "1.4. 点击 登录 按钮",
+                          "duration": 37
+                        },
+                        {
+                          "title": "2. 点击 个人中心",
+                          "duration": 34
+                        },
+                        {
+                          "title": "3. 在 昵称 中输入 才浅",
+                          "duration": 7
+                        },
+                        {
+                          "title": "4. 点击 保存",
+                          "duration": 41
+                        },
+                        {
+                          "title": "预期 4: 显示 保存成功",
+                          "duration": 2
+                        },
+                        {
+                          "title": "预期 4: 昵称 输入框的值为 才浅",
+                          "duration": 7
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:09.592Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:15",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 102,
+                            "column": 7
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-4d2081eba41c7bbda49d",
+              "file": "casesheet/login.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "[TC-011] 退出登录",
+              "ok": true,
+              "tags": [
+                "P1"
+              ],
+              "tests": [
+                {
+                  "timeout": 20000,
+                  "annotations": [
+                    {
+                      "type": "source",
+                      "description": "login.md:16",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 133,
+                        "column": 7
+                      }
+                    },
+                    {
+                      "type": "fixme",
+                      "description": "unrecognized step: 确认退出",
+                      "location": {
+                        "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                        "line": 151,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 195,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "1.1. 打开 登录页",
+                          "duration": 11
+                        },
+                        {
+                          "title": "1.2. 输入 用户名 admin",
+                          "duration": 22
+                        },
+                        {
+                          "title": "1.3. 输入 密码 123456",
+                          "duration": 38
+                        },
+                        {
+                          "title": "1.4. 点击 登录 按钮",
+                          "duration": 40
+                        },
+                        {
+                          "title": "2. 点击 退出登录",
+                          "duration": 33
+                        }
+                      ],
+                      "startTime": "2026-10-12T09:42:09.844Z",
+                      "annotations": [
+                        {
+                          "type": "source",
+                          "description": "login.md:16",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 133,
+                            "column": 7
+                          }
+                        },
+                        {
+                          "type": "fixme",
+                          "description": "unrecognized step: 确认退出",
+                          "location": {
+                            "file": "/private/tmp/claude-501/-Users-frey-Desktop-pg-web-admin/012325b9-d0ec-457f-988f-182d1f0afe59/scratchpad/pw/tests/casesheet/login.spec.ts",
+                            "line": 151,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "71cc60809a8ba2112809-23b6148d40e08d2d5a5d",
+              "file": "casesheet/login.spec.ts",
+              "line": 133,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-12T09:42:05.773Z",
+    "duration": 4303.36,
+    "expected": 6,
+    "skipped": 1,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

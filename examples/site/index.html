@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 420px; margin: 48px auto; padding: 0 16px; color: #1f2328; }
+  label { display: block; margin: 12px 0 4px; }
+  input[type=text], input[type=password] { width: 100%; padding: 8px; box-sizing: border-box; }
+  button { margin-top: 16px; padding: 8px 16px; }
+  .err { color: #b42318; margin-top: 12px; }
+  .ok { color: #067647; margin-top: 12px; }
+  nav a { margin-right: 12px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// Tiny demo app for casesheet's example sheet. Hash-free routing on pathname; the
+// dev server (serve.mjs) returns this file for every path.
+const state = { user: null, nick: 'admin' };
+const app = document.getElementById('app');
+const routes = {
+  '/login': renderLogin,
+  '/dashboard': renderDashboard,
+  '/profile': renderProfile,
+  '/': () => go(state.user ? '/dashboard' : '/login'),
+};
+function go(path) { history.pushState({}, '', path); render(); }
+function render() {
+  document.title = { '/login': '登录', '/dashboard': '后台首页', '/profile': '个人中心' }[location.pathname] || '演示';
+  (routes[location.pathname] || renderNotFound)();
+}
+function renderLogin() {
+  app.innerHTML = `
+    <h1>登录</h1>
+    <form id="f">
+      <label for="u">用户名</label><input id="u" type="text" autocomplete="off">
+      <label for="p">密码</label><input id="p" type="password">
+      <label><input id="r" type="checkbox"> 记住我</label>
+      <button type="submit" id="b" disabled>登录</button>
+      <div id="msg" role="alert"></div>
+    </form>`;
+  const u = document.getElementById('u'), p = document.getElementById('p'), b = document.getElementById('b');
+  const sync = () => { b.disabled = !u.value.trim(); };
+  u.addEventListener('input', sync); sync();
+  document.getElementById('f').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (u.value === 'admin' && p.value === '123456') { state.user = 'admin'; go('/dashboard'); }
+    else document.getElementById('msg').innerHTML = '<div class="err">用户名或密码错误</div>';
+  });
+}
+function renderDashboard() {
+  if (!state.user) return go('/login');
+  app.innerHTML = `
+    <nav><a href="/dashboard">首页</a><a href="/profile">个人中心</a><button id="out">退出登录</button></nav>
+    <h1>欢迎回来, ${state.nick}</h1>
+    <p>这是演示后台。</p>`;
+  document.getElementById('out').addEventListener('click', () => {
+    app.insertAdjacentHTML('beforeend', '<div role="dialog" aria-label="确认"><p>确定要退出吗？</p><button id="yes">确定</button><button id="no">取消</button></div>');
+    document.getElementById('yes').onclick = () => { state.user = null; go('/login'); };
+    document.getElementById('no').onclick = () => document.querySelector('[role=dialog]').remove();
+  });
+}
+function renderProfile() {
+  if (!state.user) return go('/login');
+  app.innerHTML = `
+    <nav><a href="/dashboard">首页</a><a href="/profile">个人中心</a></nav>
+    <h1>个人中心</h1>
+    <label for="n">昵称</label><input id="n" type="text" value="${state.nick}">
+    <button id="save">保存</button>
+    <div id="msg" role="status"></div>`;
+  document.getElementById('save').addEventListener('click', () => {
+    state.nick = document.getElementById('n').value;
+    document.getElementById('msg').innerHTML = '<div class="ok">保存成功</div>';
+  });
+}
+function renderNotFound() { app.innerHTML = '<h1>404</h1>'; }
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="/"]');
+  if (a) { e.preventDefault(); go(a.getAttribute('href')); }
+});
+window.addEventListener('popstate', render);
+render();
+</script>
+</body>
+</html>

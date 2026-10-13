@@ -17,3 +17,5 @@ Order matters: rules are tried top to bottom and the first match wins. Put speci
 - No LLM calls. The point is that the same sheet produces the same code every time.
 - Everything in `examples/` must keep passing end to end against `examples/site`.
 - Original content only, MIT licensed.
+
+By participating you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).

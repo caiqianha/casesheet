@@ -6,6 +6,20 @@
     "首页": "/dashboard"
   },
   "macros": {
-    "登录系统": ["打开 登录页", "输入 用户名 admin", "输入 密码 123456", "点击 登录 按钮"]
-  }
+    "登录系统": [
+      "打开 登录页",
+      "输入 用户名 admin",
+      "输入 密码 123456",
+      "点击 登录 按钮"
+    ]
+  },
+  "rules": [
+    {
+      "name": "审批通过",
+      "match": "^审批通过\\s*[:：]?\\s*(.+)$",
+      "kind": "step",
+      "code": "await ui.click(page, $1, 'link');\nawait ui.click(page, '通过', 'button');",
+      "py": "ui.click(page, $1, \"link\")\nui.click(page, \"通过\", \"button\")"
+    }
+  ]
 }

@@ -2,6 +2,7 @@
 import path from "node:path";
 import { parseStep, parseExpectation } from "./grammar.js";
 import { expandMacros } from "./config.js";
+import { caseVariants } from "./cases.js";
 import { RUNTIME_TS, toJs } from "./runtime.js";
 
 const sq = (s) => "'" + String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\n/g, "\\n") + "'";
@@ -19,6 +20,15 @@ export function lit(value) {
 }
 
 const roleArg = (kind) => (kind ? ", " + sq(kind) : "");
+
+/** Custom-rule template: $1 → group as a string literal (lit), $1raw → group text verbatim. */
+export function expandTemplate(tpl, groups, literal = lit) {
+  return String(tpl)
+    .replace(/\$(\d+)(raw)?/g, (_, n, raw) => (raw ? groups[Number(n)] ?? "" : literal(groups[Number(n)] ?? "")))
+    .split("\n")
+    .map((l) => l.replace(/\s+$/, ""))
+    .filter((l, i, a) => l || (i > 0 && i < a.length - 1));
+}
 
 export function codeFor(ast, ctx) {
   const routes = ctx.routes || {};
@@ -74,6 +84,8 @@ export function codeFor(ast, ctx) {
       return [`await expect(await ui.pickAny(page, ${sq(ast.target)}${roleArg(ast.kind)})).${ast.disabled ? "toBeDisabled" : "toBeEnabled"}();`];
     case "expectChecked":
       return [`await expect(await ui.pickCheck(page, ${sq(ast.label)})).${ast.checked ? "toBeChecked" : "not.toBeChecked"}();`];
+    case "custom":
+      return expandTemplate(ast.code, ast.groups);
     default:
       return null;
   }
@@ -85,8 +97,9 @@ export function analyzeCase(c, cfg) {
   const blocks = [];
   const unknownSteps = [];
   const unknownExpect = [];
+  const rules = cfg.rules || [];
   for (const p of c.preconditions) {
-    const ast = parseStep(p);
+    const ast = parseStep(p, rules);
     blocks.push({ kind: "pre", text: p, ast });
     // unrecognised preconditions are only comments, never failures
   }
@@ -95,18 +108,21 @@ export function analyzeCase(c, cfg) {
     if (!s.macro || s.sub === 1) no++;
     const label = s.macro ? `${no}.${s.sub}` : String(no);
     if (s.text) {
-      const ast = parseStep(s.text);
+      const ast = parseStep(s.text, rules);
       if (ast.type === "unknown") unknownSteps.push(s.text);
       blocks.push({ kind: "step", no, label, text: s.text, ast, macro: s.macro });
     }
     for (const e of s.expected) {
-      const ast = parseExpectation(e);
+      const ast = parseExpectation(e, rules);
       if (ast.type === "unknown") unknownExpect.push(e);
       blocks.push({ kind: "expect", no, label: String(no), text: e, ast });
     }
   });
   return { blocks, unknownSteps, unknownExpect, stepCount: steps.filter((s) => s.text).length, sheetSteps: no };
 }
+
+/** "[TC-001] title", or "[TC-001] title (2/3)" for a data row. */
+export const testTitle = (c) => `[${c.id}] ${c.title}${c.variant ? ` (${c.variant})` : ""}`;
 
 function tagsFor(c) {
   const tags = [];
@@ -131,62 +147,70 @@ export function emitSpec(cases, cfg, meta) {
   const stats = { cases: 0, steps: 0, unknownSteps: [], unknownExpect: [], manual: 0, fixme: 0 };
   for (const [module, list] of groups) {
     L.push(`test.describe(${sq(module)}, () => {`);
-    for (const c of list) {
-      const { blocks, unknownSteps, unknownExpect, stepCount } = analyzeCase(c, cfg);
+    for (const base of list) {
+      const variants = caseVariants(base);
+      const entry = { id: base.id, title: base.title, module, source: base.source, line: L.length + 1 };
+      if (variants.length > 1) entry.variants = [];
+      map.push(entry);
       stats.cases++;
-      stats.steps += stepCount;
-      stats.unknownSteps.push(...unknownSteps.map((t) => ({ id: c.id, text: t })));
-      stats.unknownExpect.push(...unknownExpect.map((t) => ({ id: c.id, text: t })));
-      const tags = tagsFor(c);
-      const ann = [{ type: "source", description: c.source }];
-      if (c.data) ann.push({ type: "data", description: c.data });
-      if (c.notes) ann.push({ type: "notes", description: c.notes });
-      const details = `{ tag: [${tags.map(sq).join(", ")}], annotation: [${ann.map((a) => `{ type: ${sq(a.type)}, description: ${sq(a.description)} }`).join(", ")}] }`;
-      const title = `[${c.id}] ${c.title}`;
-      map.push({ id: c.id, title: c.title, module, source: c.source, line: L.length + 1 });
-      L.push(`  test(${sq(title)}, ${details}, async ({ page }) => {`);
-      if (c.preconditions.length) {
-        for (const b of blocks.filter((b) => b.kind === "pre")) {
-          const code = b.ast.type === "unknown" || b.ast.type === "noop" ? null : codeFor(b.ast, { routes: cfg.routes });
-          L.push(`    // 前置条件 / precondition: ${b.text}`);
-          if (code) for (const line of code) L.push("    " + line);
+      for (const c of variants) {
+        const { blocks, unknownSteps, unknownExpect, stepCount } = analyzeCase(c, cfg);
+        if (c === variants[0]) {
+          stats.steps += stepCount;
+          stats.unknownSteps.push(...unknownSteps.map((t) => ({ id: c.id, text: t })));
+          stats.unknownExpect.push(...unknownExpect.map((t) => ({ id: c.id, text: t })));
         }
-      }
-      let lastMacro = null;
-      for (const b of blocks) {
-        if (b.kind === "pre") continue;
-        if (b.kind === "step") {
-          if (b.macro && b.macro !== lastMacro) L.push(`    // macro: ${b.macro}`);
-          lastMacro = b.macro || null;
-          if (b.ast.type === "unknown") {
-            stats.fixme++;
-            L.push(`    // casesheet could not parse this step. Implement it here, or add a macro for it in casesheet.config.json.`);
-            L.push(`    test.fixme(true, ${sq(`unrecognized step: ${b.text}`)});`);
-            continue;
+        const tags = tagsFor(c);
+        const ann = [{ type: "source", description: c.source }];
+        if (c.data) ann.push({ type: "data", description: c.data });
+        if (c.notes) ann.push({ type: "notes", description: c.notes });
+        const details = `{ tag: [${tags.map(sq).join(", ")}], annotation: [${ann.map((a) => `{ type: ${sq(a.type)}, description: ${sq(a.description)} }`).join(", ")}] }`;
+        const title = testTitle(c);
+        if (c.variant) entry.variants.push({ data: c.variant, title: c.title, line: L.length + 1 });
+        L.push(`  test(${sq(title)}, ${details}, async ({ page }) => {`);
+        if (c.preconditions.length) {
+          for (const b of blocks.filter((b) => b.kind === "pre")) {
+            const code = b.ast.type === "unknown" || b.ast.type === "noop" ? null : codeFor(b.ast, { routes: cfg.routes });
+            L.push(`    // 前置条件 / precondition: ${b.text}`);
+            if (code) for (const line of code) L.push("    " + line);
           }
-          const code = codeFor(b.ast, { routes: cfg.routes, stepNo: b.no });
-          L.push(`    await test.step(${sq(`${b.label}. ${b.text}`)}, async () => {`);
-          for (const line of code) L.push("      " + line);
-          L.push("    });");
-        } else {
-          if (b.ast.type === "unknown") {
-            if (cfg.strict) {
+        }
+        let lastMacro = null;
+        for (const b of blocks) {
+          if (b.kind === "pre") continue;
+          if (b.kind === "step") {
+            if (b.macro && b.macro !== lastMacro) L.push(`    // macro: ${b.macro}`);
+            lastMacro = b.macro || null;
+            if (b.ast.type === "unknown") {
               stats.fixme++;
-              L.push(`    test.fixme(true, ${sq(`unrecognized expectation: ${b.text}`)});`);
-            } else {
-              stats.manual++;
-              L.push(`    ui.manual(${sq(b.text)}); // not automated: check by hand or rephrase in the sheet`);
+              L.push(`    // casesheet could not parse this step. Implement it here, or add a macro for it in casesheet.config.json.`);
+              L.push(`    test.fixme(true, ${sq(`unrecognized step: ${b.text}`)});`);
+              continue;
             }
-            continue;
+            const code = codeFor(b.ast, { routes: cfg.routes, stepNo: b.no });
+            L.push(`    await test.step(${sq(`${b.label}. ${b.text}`)}, async () => {`);
+            for (const line of code) L.push("      " + line);
+            L.push("    });");
+          } else {
+            if (b.ast.type === "unknown") {
+              if (cfg.strict) {
+                stats.fixme++;
+                L.push(`    test.fixme(true, ${sq(`unrecognized expectation: ${b.text}`)});`);
+              } else {
+                stats.manual++;
+                L.push(`    ui.manual(${sq(b.text)}); // not automated: check by hand or rephrase in the sheet`);
+              }
+              continue;
+            }
+            const code = codeFor(b.ast, { routes: cfg.routes, stepNo: b.no });
+            L.push(`    await test.step(${sq(`预期 ${b.no}: ${b.text}`)}, async () => {`);
+            for (const line of code) L.push("      " + line);
+            L.push("    });");
           }
-          const code = codeFor(b.ast, { routes: cfg.routes, stepNo: b.no });
-          L.push(`    await test.step(${sq(`预期 ${b.no}: ${b.text}`)}, async () => {`);
-          for (const line of code) L.push("      " + line);
-          L.push("    });");
         }
+        L.push("  });");
+        L.push("");
       }
-      L.push("  });");
-      L.push("");
     }
     if (L[L.length - 1] === "") L.pop();
     L.push("});");
@@ -203,6 +227,10 @@ export function runtimeFor(cfg) {
 
 export function specFileName(sourceFile, cfg, module) {
   const base = module ? module : path.basename(sourceFile, path.extname(sourceFile));
+  if (cfg.lang === "py") {
+    const safe = base.replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_+|_+$/g, "") || "cases";
+    return `test_${/^\d/.test(safe) ? "_" + safe : safe}.py`;
+  }
   const safe = base.replace(/[\\/:*?"<>|\s]+/g, "-").replace(/^-+|-+$/g, "") || "cases";
   return `${safe}.spec.${cfg.lang === "js" ? "js" : "ts"}`;
 }

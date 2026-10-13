@@ -26,7 +26,7 @@ export function listSheets(buf) {
   return sheetTable(files).map((s) => s.name);
 }
 
-function sheetTable(files) {
+export function sheetTable(files) {
   const wb = files.get("xl/workbook.xml")?.toString("utf8") || "";
   const rels = files.get("xl/_rels/workbook.xml.rels")?.toString("utf8") || "";
   const relMap = new Map();

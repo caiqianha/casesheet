@@ -16,20 +16,28 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm test
   e2e:
-    name: generated specs pass under Playwright
+    name: generated specs pass under Playwright (TS, JS, pytest)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - run: npm run e2e
       - run: npm run e2e:js
+      - run: npm run e2e:py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-results
           path: |
             .e2e/results.json
+            .e2e/results.py.json
             .e2e/results.csv
+            .e2e/login.result.xlsx
+            .e2e/login.result.py.xlsx
             .e2e/tests
+            .e2e/pytests

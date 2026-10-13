@@ -46,6 +46,59 @@ export function alignExpected(steps, expected) {
   return out;
 }
 
+// Data column → one object per line. "k=v; k2=v2" (also "k: v", "；" separators)
+// or a JSON object per line. Returns [] when any line is not key/value data, so
+// free-text notes in that column keep the old behaviour (a plain annotation).
+export function parseDataRows(cell) {
+  const lines = String(cell || "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+  const rows = lines.map(parseDataLine);
+  return rows.every(Boolean) ? rows : [];
+}
+
+function parseDataLine(line) {
+  if (/^\{[\s\S]*\}$/.test(line)) {
+    try {
+      const o = JSON.parse(line);
+      if (o && typeof o === "object" && !Array.isArray(o)) return { line, vars: Object.fromEntries(Object.entries(o).map(([k, v]) => [k, v == null ? "" : String(v)])) };
+    } catch {
+      return null;
+    }
+  }
+  const vars = {};
+  let any = false;
+  for (const pair of line.split(/[;；]/).map((p) => p.trim()).filter(Boolean)) {
+    const m = /^([^=:：]+?)\s*[=:：]\s*(.*)$/.exec(pair);
+    if (!m) return null;
+    vars[m[1].trim()] = m[2].trim();
+    any = true;
+  }
+  return any ? { line, vars } : null;
+}
+
+/** Replace {{k}} with the data row's value for every k the row defines; other placeholders stay for the env lookup. */
+export function substitute(text, vars) {
+  if (!vars || !text) return text;
+  return String(text).replace(/\{\{\s*([^{}]+?)\s*\}\}/g, (all, k) => (k in vars ? vars[k] : all));
+}
+
+/** One case per data row ("[TC-001] title (1/3)"); a case without 2+ data rows is returned as is. */
+export function caseVariants(c) {
+  const rows = c.dataRows || [];
+  if (rows.length < 2) return [{ ...c, variant: "" }];
+  return rows.map((r, i) => ({
+    ...c,
+    title: substitute(c.title, r.vars),
+    preconditions: c.preconditions.map((p) => substitute(p, r.vars)),
+    steps: c.steps.map((s) => ({ ...s, text: substitute(s.text, r.vars), expected: s.expected.map((e) => substitute(e, r.vars)) })),
+    data: r.line,
+    variant: `${i + 1}/${rows.length}`,
+  }));
+}
+
 const splitTags = (s) =>
   String(s || "")
     .split(/[,，;；|\s/]+/)
@@ -77,6 +130,7 @@ export function tableToCases(table, source) {
       tags: splitTags(cell(row, "tags")),
       preconditions: splitLines(cell(row, "precondition")).map((l) => l.text),
       data: cell(row, "data"),
+      dataRows: parseDataRows(cell(row, "data")),
       notes: cell(row, "notes"),
       steps,
       extra: Object.fromEntries(extra.map((e) => [e.name, row.cells[e.index] || ""]).filter(([, v]) => v)),

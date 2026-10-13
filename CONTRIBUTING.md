@@ -6,8 +6,10 @@ casesheet is a zero-dependency Node CLI. `npm test` runs in a second; `npm run e
 
 1. Add a rule (or a regex to an existing rule) in `src/grammar.js`. Keep the `zh` / `en` examples current: a test checks that every example parses with its own rule.
 2. Add the sentence to `test/grammar.test.js` with the AST you expect.
-3. If it needs a new action type, add the emitter in `src/emit.js` and, if the runtime helper needs to change, `src/runtime.js` (TypeScript; `toJs()` must still strip every annotation you use — the test checks the JS output with `node --check`).
-4. Run `npm test` and `npm run e2e`.
+3. If it needs a new action type, add the emitter in `src/emit.js` **and** `src/emit-py.js`, and, if the runtime helper needs to change, `src/runtime.js` (TypeScript; `toJs()` must still strip every annotation you use — the test checks the JS output with `node --check`) and `src/runtime-py.js` (its port; the test compiles the generated Python with `py_compile`).
+4. Run `npm test`, `npm run e2e` and `npm run e2e:py`.
+
+Project-specific sentences do not need a grammar change: `rules` in `casesheet.config.json` are tried before the grammar (see README → Custom rules).
 
 Order matters: rules are tried top to bottom and the first match wins. Put specific patterns before general ones.
 

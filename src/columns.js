@@ -13,7 +13,8 @@ const ALIASES = {
   tags: ["tags", "tag", "labels", "label", "type", "category", "标签", "类型", "用例类型", "分类"],
   data: ["data", "testdata", "params", "parameters", "input", "inputs", "测试数据", "数据", "参数", "输入数据"],
   notes: ["notes", "note", "remark", "remarks", "comment", "comments", "备注", "说明", "注释"],
-  actual: ["actual", "actualresult", "status", "result_status", "实际结果", "执行结果", "状态", "是否通过", "测试结果"],
+  actual: ["actual", "actualresult", "actualresults", "实际结果", "执行结果", "测试结果", "实际"],
+  status: ["status", "result_status", "teststatus", "executionstatus", "状态", "是否通过", "执行状态", "通过", "结果状态"],
 };
 
 const norm = (s) =>

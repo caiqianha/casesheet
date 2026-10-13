@@ -1,7 +1,7 @@
 {
   "name": "casesheet",
-  "version": "0.1.0",
-  "description": "Turn the test-case tables QA already writes (Markdown, CSV, Excel) into runnable Playwright specs. Chinese and English steps, no LLM, zero dependencies.",
+  "version": "0.2.0",
+  "description": "Turn the test-case tables QA already writes (Markdown, CSV, Excel) into runnable Playwright specs (TypeScript, JavaScript or pytest), run them, and write the results back into the sheet. Chinese and English steps, no LLM, zero dependencies.",
   "type": "module",
   "bin": {
     "casesheet": "./bin/casesheet.js"
@@ -17,11 +17,12 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "test": "node --test test/readers.test.js test/grammar.test.js test/build.test.js test/report.test.js",
+    "test": "node --test test/readers.test.js test/grammar.test.js test/build.test.js test/report.test.js test/writeback.test.js test/rules.test.js test/data.test.js test/run.test.js test/python.test.js",
     "demo": "node bin/casesheet.js build examples/login.md -o /tmp/casesheet-demo && cat /tmp/casesheet-demo/login.spec.ts",
     "e2e": "node scripts/e2e.mjs",
     "e2e:js": "node scripts/e2e.mjs --js",
-    "example:xlsx": "node scripts/make-example-xlsx.mjs"
+    "example:xlsx": "node scripts/make-example-xlsx.mjs",
+    "e2e:py": "node scripts/e2e.mjs --py"
   },
   "engines": {
     "node": ">=18"
@@ -38,7 +39,10 @@
     "keyword-driven",
     "codegen",
     "测试用例",
-    "自动化测试"
+    "自动化测试",
+    "pytest",
+    "playwright-python",
+    "data-driven"
   ],
   "license": "MIT",
   "repository": {

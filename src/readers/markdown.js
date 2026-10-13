@@ -2,7 +2,8 @@
 // Several tables in one file are fine; the nearest heading above a table is kept
 // so it can serve as the module name when the sheet has no module column.
 
-function splitRow(line) {
+/** Cells of a table row, raw (escaped pipes resolved, nothing else cleaned). */
+export function splitRawRow(line) {
   const s = line.trim().replace(/^\|/, "").replace(/\|$/, "");
   const cells = [];
   let cur = "";
@@ -17,8 +18,10 @@ function splitRow(line) {
     } else cur += ch;
   }
   cells.push(cur);
-  return cells.map(cleanCell);
+  return cells;
 }
+
+const splitRow = (line) => splitRawRow(line).map(cleanCell);
 
 export function cleanCell(c) {
   return c
@@ -30,7 +33,7 @@ export function cleanCell(c) {
     .trim();
 }
 
-const isSeparator = (line) => /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(line);
+export const isSeparator = (line) => /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(line);
 
 export function parseMarkdown(text) {
   const lines = text.split(/\r?\n/);

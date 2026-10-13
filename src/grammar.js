@@ -349,17 +349,32 @@ function run(rules, text) {
 
 const ASSERT_PREFIX = /^(?:断言|验证|检查|确认|校验|期望|预期|assert|expect|verify|check\s+that|ensure|should)\b/i;
 
-export function parseStep(text) {
+// Project rules from casesheet.config.json → rules, tried before the built-in grammar, in order.
+function runCustom(rules, text, kind) {
+  for (const r of rules || []) {
+    if (r.kind !== kind) continue;
+    const re = r.re || new RegExp(r.match, r.flags || "");
+    const m = re.exec(text);
+    if (m) return { type: "custom", name: r.name || r.match, code: r.code, py: r.py || null, groups: Array.from(m, (g) => g ?? ""), rule: `custom:${r.name || r.match}`, raw: text };
+  }
+  return null;
+}
+
+export function parseStep(text, rules) {
   const t = String(text).trim();
   if (!t) return { type: "noop", raw: t };
+  const custom = runCustom(rules, t, "step") || runCustom(rules, t, "expect");
+  if (custom) return custom;
   // Steps can carry assertions too ("验证 显示 登录成功")
   if (ASSERT_PREFIX.test(t)) return run(E, t) || run(A, t) || { type: "unknown", raw: t };
   return run(A, t) || run(E, t) || { type: "unknown", raw: t };
 }
 
-export function parseExpectation(text) {
+export function parseExpectation(text, rules) {
   const t = String(text).trim();
   if (!t) return { type: "noop", raw: t };
+  const custom = runCustom(rules, t, "expect") || runCustom(rules, t, "step");
+  if (custom) return custom;
   return run(E, t) || run(A, t) || { type: "unknown", raw: t };
 }
 
